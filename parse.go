@@ -74,7 +74,7 @@ func (a *Assist) Scan(dst interface{}) error {
 	itemT := dstT.Elem()
 	for i := 0; i < itemT.NumField(); i++ {
 		fieldType := itemT.Field(i)
-		colName := fieldType.Tag.Get("column")
+		colName := fieldType.Tag.Get("excelbuddy")
 		colMap[colName] = ColReflect{
 			ColName:     colName,
 			FieldIndex:  i,

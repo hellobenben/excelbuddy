@@ -26,10 +26,10 @@ func main() {
 	assist.SetColumnValidators("email", []excelbuddy.Validator{validator.Required{}})
 	assist.SetColumnValidators("中文", []excelbuddy.Validator{validator.Required{}})
 	type Row struct {
-		Name  string `column:"name"`
-		Age   int    `column:"age"`
-		Email string `column:"email"`
-		Ch    string `column:"中文"`
+		Name  string `excelbuddy:"name"`
+		Age   int    `excelbuddy:"age"`
+		Email string `excelbuddy:"email"`
+		Ch    string `excelbuddy:"中文"`
 	}
 	var rows []Row
 	err = assist.Scan(&rows)
