@@ -1,6 +1,7 @@
 package excelbuddy
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/xuri/excelize/v2"
@@ -170,6 +171,10 @@ func (a *Assist) Save() error {
 
 func (a *Assist) SaveAs(filename string) error {
 	return a.f.SaveAs(filename)
+}
+
+func (a *Assist) Buffer() (*bytes.Buffer, error) {
+	return a.f.WriteToBuffer()
 }
 
 func (a *Assist) addError(row int, col int, msg string) {
