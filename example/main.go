@@ -37,7 +37,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	if assist.Validate() {
+	if !assist.Validate() {
 		assist.MarkError()
 		err := assist.SaveAs("./example/demo_err.xlsx")
 		fmt.Println(err)

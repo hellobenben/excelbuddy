@@ -148,7 +148,7 @@ func (a *Assist) Scan(dst interface{}) error {
 }
 
 func (a *Assist) Validate() bool {
-	return len(a.cellError) > 0
+	return len(a.cellError) == 0
 }
 
 func (a *Assist) MarkError() {
