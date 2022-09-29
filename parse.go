@@ -94,7 +94,13 @@ func (a *Assist) Scan(dst interface{}) error {
 	for i, name := range rows[0] {
 		if col, ok := colMap[name]; ok {
 			col.ColIndex = i
+			col.Found = true
 			colMap[name] = col
+		}
+	}
+	for _, c := range colMap {
+		if !c.Found {
+			return errors.New(fmt.Sprintf("column %s not found", c.ColName))
 		}
 	}
 	rowsSlice := reflect.MakeSlice(reflect.SliceOf(itemT), 0, 10)

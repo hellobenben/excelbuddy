@@ -30,6 +30,7 @@ type Assist struct {
 }
 
 type ColReflect struct {
+	Found       bool
 	ColName     string
 	ColIndex    int
 	FieldIndex  int
