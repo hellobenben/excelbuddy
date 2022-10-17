@@ -66,10 +66,10 @@ func (a *Assist) SetColumnValidators(name string, validators []Validator) *Assis
 	return a
 }
 
-func (a *Assist) Scan(dst interface{}) error {
+func (a *Assist) Scan(dst interface{}) ([]string, error) {
 	dstT := reflect.TypeOf(dst).Elem()
 	if dstT.Kind() != reflect.Slice {
-		return errors.New("dst must be a slice")
+		return nil, errors.New("dst must be a slice")
 	}
 	colMap := map[string]ColReflect{}
 	itemT := dstT.Elem()
@@ -86,23 +86,27 @@ func (a *Assist) Scan(dst interface{}) error {
 	// Get all the rows in the Sheet1.
 	rows, err := a.f.GetRows(a.options.SheetName)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if len(rows) == 0 {
-		return nil
+		return nil, nil
 	}
+
+	var mappedColNames []string
+
 	for i, name := range rows[0] {
 		if col, ok := colMap[name]; ok {
 			col.ColIndex = i
 			col.Found = true
 			colMap[name] = col
+			mappedColNames = append(mappedColNames, name)
 		}
 	}
-	for _, c := range colMap {
-		if !c.Found {
-			return errors.New(fmt.Sprintf("column %s not found", c.ColName))
-		}
-	}
+	//for _, c := range colMap {
+	//	if !c.Found {
+	//		return errors.New(fmt.Sprintf("column %s not found", c.ColName))
+	//	}
+	//}
 	rowsSlice := reflect.MakeSlice(reflect.SliceOf(itemT), 0, 10)
 	for rowIndex := 1; rowIndex < len(rows); rowIndex++ {
 		row := rows[rowIndex]
@@ -151,7 +155,7 @@ func (a *Assist) Scan(dst interface{}) error {
 	}
 	dstV := reflect.ValueOf(dst).Elem()
 	dstV.Set(rowsSlice)
-	return nil
+	return mappedColNames, nil
 }
 
 func (a *Assist) Validate() bool {
