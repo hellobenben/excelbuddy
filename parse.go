@@ -113,6 +113,9 @@ func (a *Assist) Scan(dst interface{}) ([]string, error) {
 		itemV := reflect.New(itemT)
 		hasErr := false
 		for _, col := range colMap {
+			if !col.Found {
+				continue
+			}
 			field := itemV.Elem().Field(col.FieldIndex)
 			var v string
 			if len(row) > col.ColIndex {
