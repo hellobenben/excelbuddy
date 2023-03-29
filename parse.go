@@ -53,6 +53,13 @@ func (a *Assist) Close() error {
 
 func (a *Assist) Options(options Options) *Assist {
 	a.options = options
+	if a.options.DataOffset == 0 {
+		a.options.DataOffset = 1
+	}
+	if len(a.options.SheetName) == 0 {
+		a.options.SheetName = "Sheet1"
+	}
+
 	return a
 }
 
@@ -94,7 +101,7 @@ func (a *Assist) Scan(dst interface{}) ([]string, error) {
 
 	var mappedColNames []string
 
-	for i, name := range rows[0] {
+	for i, name := range rows[a.options.ColumnOffset] {
 		if col, ok := colMap[name]; ok {
 			col.ColIndex = i
 			col.Found = true
@@ -108,7 +115,7 @@ func (a *Assist) Scan(dst interface{}) ([]string, error) {
 	//	}
 	//}
 	rowsSlice := reflect.MakeSlice(reflect.SliceOf(itemT), 0, 10)
-	for rowIndex := 1; rowIndex < len(rows); rowIndex++ {
+	for rowIndex := a.options.DataOffset; rowIndex < len(rows); rowIndex++ {
 		row := rows[rowIndex]
 		itemV := reflect.New(itemT)
 		hasErr := false

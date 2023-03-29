@@ -22,6 +22,10 @@ func main() {
 			assist.Close()
 		}()
 	}
+	assist.Options(excelbuddy.Options{
+		ColumnOffset: 1,
+		DataOffset:   2,
+	})
 	assist.SetColumnValidators("age", []excelbuddy.Validator{validator.RegExpValidator{Pattern: "^[1-9][1-9]$"}})
 	assist.SetColumnValidators("email", []excelbuddy.Validator{validator.Required{}})
 	assist.SetColumnValidators("中文", []excelbuddy.Validator{validator.Required{}})
@@ -32,11 +36,11 @@ func main() {
 		Ch    string `excelbuddy:"中文"`
 	}
 	var rows []Row
-	err = assist.Scan(&rows)
+	cols, err := assist.Scan(&rows)
 	if err != nil {
 		fmt.Println(err)
 	}
-
+	fmt.Println(cols)
 	if !assist.Validate() {
 		assist.MarkError()
 		err := assist.SaveAs("./example/demo_err.xlsx")

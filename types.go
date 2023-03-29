@@ -7,8 +7,10 @@ import (
 )
 
 type Options struct {
-	SheetName string
-	Columns   map[string]Column
+	SheetName    string
+	Columns      map[string]Column
+	ColumnOffset int
+	DataOffset   int
 }
 
 type Validator interface {
